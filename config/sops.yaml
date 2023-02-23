@@ -1,0 +1,76 @@
+MTH-0035:
+  samp_inj_vol: 10
+  std_inj_vol: 10
+  volume: 200
+QAL0900:
+  samp_inj_vol: ''
+  std_inj_vol: 2
+  volume: 100
+QAL0901:
+  samp_inj_vol: ''
+  std_inj_vol: 5
+  volume: 1000
+QAL0902:
+  samp_inj_vol: '5'
+  std_inj_vol: 5
+  volume: 100
+QAL0904:
+  samp_inj_vol: ''
+  std_inj_vol: 2
+  volume: 100
+QAL0910:
+  samp_inj_vol: ''
+  std_inj_vol: ''
+  volume: ''
+QAL0930:
+  samp_inj_vol: '5'
+  std_inj_vol: 5
+  volume: 1000
+QAL0933:
+  samp_inj_vol: '2'
+  std_inj_vol: 2
+  volume: 100
+QAL0937:
+  samp_inj_vol: 2
+  std_inj_vol: 2
+  volume: 100
+QAL0939:
+  samp_inj_vol: ''
+  std_inj_vol: ''
+  volume: ''
+QAL0940:
+  samp_inj_vol: ''
+  std_inj_vol: ''
+  volume: ''
+QAL1014:
+  samp_inj_vol: ''
+  std_inj_vol: ''
+  volume: 100
+QAL1016:
+  samp_inj_vol: ''
+  std_inj_vol: ''
+  volume: ''
+QAL1020:
+  samp_inj_vol: ''
+  std_inj_vol: ''
+  volume: ''
+QAL1022:
+  samp_inj_vol: ''
+  std_inj_vol: ''
+  volume: ''
+QAL1201:
+  samp_inj_vol: ''
+  std_inj_vol: 2
+  volume: 1000
+QAL1202:
+  samp_inj_vol: ''
+  std_inj_vol: ''
+  volume: ''
+QAL1203:
+  samp_inj_vol: 10
+  std_inj_vol: 10
+  volume: 200
+QAL1209:
+  samp_inj_vol: ''
+  std_inj_vol: ''
+  volume: ''

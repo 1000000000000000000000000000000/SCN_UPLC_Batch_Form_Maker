@@ -1,0 +1,80 @@
+EXAMPLE:
+  notebook_number: RP-027
+  stock_page: '83'
+  working_page: '92'
+MTH-0035:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL0900:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL0901:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL0902:
+  notebook_number: 'RP-027'
+  stock_page: '50'
+  working_page: '72'
+QAL0904:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL0910:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL0930:
+  notebook_number: 'RP-023'
+  stock_page: '03'
+  working_page: '05'
+QAL0933:
+  notebook_number: 'JF-054'
+  stock_page: '88'
+  working_page: '89'
+QAL0937:
+  notebook_number: 'GR-055'
+  stock_page: '10'
+  working_page: '12'
+QAL0939:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL0940:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL1014:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL1016:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL1020:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL1022:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL1201:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL1202:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL1203:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
+QAL1209:
+  notebook_number: ''
+  stock_page: ''
+  working_page: ''
