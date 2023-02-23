@@ -1,2 +1,2 @@
-# SCN_UPLC_Batch_Form_Maker
-This program helps the laboratory professionals at SCN in preparing cGMP compliant UPLC forms.
+# SCN UPLC Batch Form Maker
+This program helps the laboratory professionals at Santa Cruz Nutritionals in preparing cGMP compliant forms that store all required sample preparation information. The program reads information from a password protected specification database to speed up the previously manual process of sample information retrieval. The program fills in the forms, reducing transfer errors and redundant entries - all while ensuring legibility. Any unused portions of the forms are crossed out, initialed, and date stamped. A PDF is created so that it can be reviewed for accuracy by he analyst before printing. The code, forms, images, and all other content and information are the property of Santa Cruz Nutritionals and should not be used without the written permission of Santa Cruz Nutritionals.
