@@ -33,6 +33,9 @@ import msoffcrypto # pip install msoffcrypto-tool
 import io
 import openpyxl
 import random
+import pickle
+import colorama
+from colorama import Fore, Back, Style
 
 def write_dict_to_yaml(dct, filepath):
 	with open(filepath, 'w') as file:
@@ -50,12 +53,14 @@ def read_yaml_to_list(filepath):
 	with open(filepath, 'r') as file:
 		return list(yaml.safe_load(file).items())
 
+colorama.init(autoreset=False)
 
+global R_drive_parent_folder
 R_drive_parent_folder = os.path.normpath('R:\\QC\\Laboratory\\7. Lab improvement\\Raw Material Testing Plan\\test\\')
 
 if os.path.exists(R_drive_parent_folder) == False:
 	os.makedirs(R_drive_parent_folder, exist_ok=True)
-	print(f'Directory Created: {R_drive_parent_folder}\n')
+	print(f'{Fore.GREEN}Directory Created:{Fore.RESET} {R_drive_parent_folder}\n')
 
 primary_path = os.path.join(R_drive_parent_folder, 'config')
 backup_path = os.path.join(os.getcwd(), 'config')
@@ -101,7 +106,7 @@ def yaml_data_xfer(filename='test.yaml', primary_path=primary_path, backup_path=
 	elif os.path.exists(backup_yaml_file) == True:
 		if backup_path != '':
 			if silent == False:
-				print(f"Could not find {filename} file in {primary_path}. Trying {backup_path} location now.")
+				print(f"{Fore.RED}Could not find {filename} file in {primary_path}.{Fore.RESET} Trying {backup_path} location now.")
 			# Read primary locations YAML file
 			x = check_dtype(backup_yaml_file, data, do='read')
 	else:
@@ -109,11 +114,11 @@ def yaml_data_xfer(filename='test.yaml', primary_path=primary_path, backup_path=
 
 		if backup_path == '':
 			if silent == False:
-				print(f"Could not find {filename} file in {primary_path}. Defaulting to hard coded version.")
+				print(f"{Fore.RED}Could not find {filename} file in {primary_path}. Defaulting to hard coded version.{Fore.RESET}")
 
 		if backup_path != '':
 			if silent == False:
-				print(f"Could not find {filename} file in {primary_path} or {backup_path}. Defaulting to hard coded version.")
+				print(f"{Fore.RED}Could not find {filename} file in {primary_path} or {backup_path}. Defaulting to hard coded version.{Fore.RESET}")
 			if os.path.exists(backup_path) == False:
 				os.makedirs(backup_path, exist_ok=True)
 
@@ -132,13 +137,13 @@ def yaml_data_xfer(filename='test.yaml', primary_path=primary_path, backup_path=
 	return x
 
 equipment_config_default_data_input = {'names':["", "Michael Groden", "Emily Whitaker", "Richard Pearson", "Gerry Reyes", "Jennie Flores", "Joseph Porfido", "Curtis Halpin"],
-										'scales': ["", "002397", "002442", "003218", "002397 and 002442", "002397 and 003218", "002442 and 003218", "002397, 002442, and 003218"],
+										'scales': ["", "002442", "003218", "002442 and 003218"],
 										'uplc': ["", "UPLC 1", "UPLC 2", "UPLC 3", "UPLC 4", "UPLC 1 and 4", "UPLC 1 and 2", "UPLC 1,2,4", "UPLC 2 and 4"],
 										'vitamin_list': ["", "Vitamin C (QAL1209)", "B1 (QAL0930)", "B2 (QAL0930)", "B3 (QAL0930)", "B5 (QAL0930)", "B6 (QAL0930)", "B6 (QAL0901)",
 														"B7 (QAL0933)", "B9 (QAL0937)", "B9 (QAL1202)", "B12 (QAL1016)", "B12 (QAL1203)", "B12 (QAL1022)", "Caffeine (QAL1201)",
 														"Chlor Acids (QAL0940)", "CoQ10 (QAL1020)", "Curcumin (QAL0939)", "Melatonin (QAL1014)", "Melatonin (MTH-0035)" ]}
 
-user_preferences_default_data_input = {'name_selection':0, 'scale_selection':0, 'uplc_selection':0, 'GMP_crossouts_font_color': 'Red', 'print_standard_notebook_info':True, 'print_injection_volumes': True}
+user_preferences_default_data_input = {'name_selection':0, 'scale_selection':0, 'uplc_selection':0, 'GMP_crossouts_font_color': 'Red', 'print_standard_notebook_info': False, 'print_injection_volumes': False}
 
 standard_notebook_info = {
 							'EXAMPLE':{'notebook_number':'RP-027', 'stock_page':'83', 'working_page':'92'},
@@ -371,7 +376,6 @@ name.current(user_preferences_config['name_selection'])
 name.grid(column=0, row=1, padx=(50,2), pady=5, sticky=W)
 
 scale = Combobox(misc_info_frame, width=22)
-#scale['values'] = ("", "002397", "002442", "003218", "002397 and 002442", "002397 and 003218", "002442 and 003218", "002397, 002442, and 003218")
 scale['values'] = (equipment_config['scales'])
 scale.current(user_preferences_config['scale_selection']) #set the selected item
 scale.grid(column=1, row=1, padx=2, pady=5)
@@ -1256,7 +1260,7 @@ def get_specification(wip, test_list, stability_status, silent=True, R_drive_par
 		#df = read_encrypted_excel(os.path.normpath('R:\\QC\\Laboratory\\7. Lab improvement\\Raw Material Testing Plan\\test\\password_protected_specification_database.xlsx'))
 		df = read_encrypted_excel(os.path.join(R_drive_parent_folder, 'specification_database.xlsx'))
 	except:
-		print(f"Could not access {os.path.join(str(R_drive_parent_folder), 'specification_database.xlsx')} in the R: drive. Trying local location now.")
+		print(f"{Fore.YELLOW}Could not access {os.path.join(str(R_drive_parent_folder), 'specification_database.xlsx')} in the R: drive. Trying local location now.{Fore.RESET}")
 		#Read the xlsx file containing the specifications for UPLC testing
 		df = pd.read_excel(os.path.join(os.getcwd(), 'specification_database.xlsx'), engine='openpyxl', dtype=str)
 
@@ -1281,7 +1285,7 @@ def get_specification(wip, test_list, stability_status, silent=True, R_drive_par
 				elif stability_status == True:
 					spec_column = analyte + ' Stability Specification'
 				else:
-					print("The program does not seem to be reading the stability checkbox correctly.\nSee the get_specification function.")
+					print(f"{Fore.RED}The program does not seem to be reading the stability checkbox correctly.\nSee the get_specification function.{Fore.RESET}")
 
 				method = analyte + ' SOP'
 				form = analyte + ' Form'
@@ -1292,20 +1296,20 @@ def get_specification(wip, test_list, stability_status, silent=True, R_drive_par
 
 				if type(spec) != str:
 					spec = ''
-					if silent== False:
-						print("No specification found in database.")
+					if silent == False:
+						print(f"{Fore.RED}No specification found in database.{Fore.RESET}")
 				spec_list.append(spec)
 
 				if type(vitamer) != str:
 					vitamer = analyte
-					if silent== False:
-						print("No specific vitamin form found in database. Defaulting to ambiguous form.")
+					if silent == False:
+						print(f"{Fore.YELLOW}No specific vitamin form found in database.{Fore.RESET} Defaulting to ambiguous form.")
 				form_list.append(vitamer)
 
 				if type(spec_sop) != str:
 					spec_sop = ''
-					if silent== False:
-						print(f"The SOP ID is not found in the database for {analyte}. Please double check the specification_database.xlsx file.")
+					if silent == False:
+						print(f"{Fore.RED}The SOP ID is not found in the database for {analyte}.{Fore.RESET} Please double check the specification_database.xlsx file.")
 				method_list.append(spec_sop)
 
 			else:
@@ -1321,19 +1325,19 @@ def get_specification(wip, test_list, stability_status, silent=True, R_drive_par
 		# If piece weight or usage units are empty
 		if df3.iloc[0]['Piece Weight/Usage'] == None:
 			if silent== False:
-				print("Missing data in Piece Weight/Usage column in specification database.")
+				print(f"{Fore.RED}Missing data in Piece Weight/Usage column in specification database.{Fore.RESET}")
 			piece_weight_or_usage = ''
 		elif df3.iloc[0]['PW/Usage Units'] == None:
 			if silent== False:
-				print("Missing data in PW/Usage Units column in specification database.")
+				print(f"{Fore.RED}Missing data in PW/Usage Units column in specification database.{Fore.RESET}")
 			piece_weight_or_usage = ''
 		elif df3.iloc[0]['Piece Weight/Usage'] == '':
 			if silent== False:
-				print("Missing data in Piece Weight/Usage column in specification database.")
+				print(f"{Fore.RED}Missing data in Piece Weight/Usage column in specification database.{Fore.RESET}")
 			piece_weight_or_usage = ''
 		elif df3.iloc[0]['PW/Usage Units'] == '':
 			if silent== False:
-				print("Missing data in PW/Usage Units column in specification database.")
+				print(f"{Fore.RED}Missing data in PW/Usage Units column in specification database.{Fore.RESET}")
 			piece_weight_or_usage = ''
 		else:
 			piece_weight_or_usage = str(df3.iloc[0]['Piece Weight/Usage']) + ' ' + df3.iloc[0]['PW/Usage Units']
@@ -1351,7 +1355,7 @@ def get_specification(wip, test_list, stability_status, silent=True, R_drive_par
 	# If a matching WIP was not found in the specification xlsx file
 	else:
 		if silent == False:
-			print(f'WIP/Item {wip} does not have specification data entered into the specification database.')
+			print(f'{Fore.RED}WIP/Item {wip} does not have specification data entered into the specification database.{Fore.RESET}')
 
 		spec_list = []
 		form_list = []
@@ -1383,22 +1387,23 @@ def get_specification(wip, test_list, stability_status, silent=True, R_drive_par
 
 def click_and_exit():
 
-	print("  _____   __  ____       ____     ___  _____ ______    __   ___        ")
-	print(" / ___/  /  ]|    \     |    \   /  _]/ ___/|      T  /  ] /   \       ")
-	print("(   \_  /  / |  _  Y    |  o  ) /  [_(   \_ |      | /  / Y     Y      ")
-	print(" \__  T/  /  |  |  |    |     TY    _]\__  Tl_j  l_j/  /  |  O  |      ")
-	print(" /  \ /   \_ |  |  |    |  O  ||   [_ /  \ |  |  | /   \_ |     |      ")
-	print(" \    \     ||  |  |    |     ||     T\    |  |  | \     |l     !      ")
-	print("  \___j\____jl__j__j    l_____jl_____j \___j  l__j  \____j \___/       ")
-	print("                                                                       ")
-	print(" _____   ___   ____   ___ ___      ___ ___   ____  __  _    ___  ____  ")
-	print("|     | /   \ |    \ |   T   T    |   T   T /    T|  l/ ]  /  _]|    \ ")
-	print("|   __jY     Y|  D  )| _   _ |    | _   _ |Y  o  ||  ' /  /  [_ |  D  )")
-	print("|  l_  |  O  ||    / |  \_/  |    |  \_/  ||     ||    \ Y    _]|    / ")
-	print("|   _] |     ||    \ |   |   |    |   |   ||  _  ||     Y|   [_ |    \ ")
-	print("|  T   l     !|  .  Y|   |   |    |   |   ||  |  ||  .  ||     T|  .  Y")
-	print("l__j    \___/ l__j\_jl___j___j    l___j___jl__j__jl__j\_jl_____jl__j\_j")
-	print("                                                                       ")
+	colorama.init(autoreset=False)
+	print(Fore.GREEN + "  _____   __  ____   " + Fore.CYAN + "    ____     ___  _____ ______    __   ___        ")
+	print(Fore.GREEN + " / ___/  /  ]|    \  " + Fore.CYAN + "   |    \   /  _]/ ___/|      T  /  ] /   \       ")
+	print(Fore.GREEN + "(   \_  /  / |  _  Y " + Fore.CYAN + "   |  o  ) /  [_(   \_ |      | /  / Y     Y      ")
+	print(Fore.GREEN + " \__  T/  /  |  |  | " + Fore.CYAN + "   |     TY    _]\__  Tl_j  l_j/  /  |  O  |      ")
+	print(Fore.GREEN + " /  \ /   \_ |  |  | " + Fore.CYAN + "   |  O  ||   [_ /  \ |  |  | /   \_ |     |      ")
+	print(Fore.GREEN + " \    \     ||  |  | " + Fore.CYAN + "   |     ||     T\    |  |  | \     |l     !      ")
+	print(Fore.GREEN + "  \___j\____jl__j__j " + Fore.CYAN + "   l_____jl_____j \___j  l__j  \____j \___/       ")
+	print("                                                                                                     ")
+	print(Fore.YELLOW + " _____   ___   ____   ___ ___      ___ ___   ____  __  _    ___  ____                  ")
+	print(Fore.YELLOW + "|     | /   \ |    \ |   T   T    |   T   T /    T|  l/ ]  /  _]|    \                 ")
+	print(Fore.YELLOW + "|   __jY     Y|  D  )| _   _ |    | _   _ |Y  o  ||  ' /  /  [_ |  D  )                ")
+	print(Fore.YELLOW + "|  l_  |  O  ||    / |  \_/  |    |  \_/  ||     ||    \ Y    _]|    /                 ")
+	print(Fore.YELLOW + "|   _] |     ||    \ |   |   |    |   |   ||  _  ||     Y|   [_ |    \                 ")
+	print(Fore.YELLOW + "|  T   l     !|  .  Y|   |   |    |   |   ||  |  ||  .  ||     T|  .  Y                ")
+	print(Fore.YELLOW + "l__j    \___/ l__j\_jl___j___j    l___j___jl__j__jl__j\_jl_____jl__j\_j                ")
+	print(Fore.RESET + "                                                                                        ")
 
 	sop_info_default_input_data = {
 				"QAL1203":{"std_inj_vol":10, "samp_inj_vol":10, "volume":200},   # New cyanocobalamin
@@ -1421,6 +1426,58 @@ def click_and_exit():
 				"QAL1016":{"std_inj_vol":'', "samp_inj_vol":'', "volume":''},    # Old cyanocobalamin
 				"QAL1022":{"std_inj_vol":'', "samp_inj_vol":'', "volume":''}     # Old methylcobalamin
 				}
+
+	# Function to write a pickle file
+	def write_batch_number_pickle(pickle_path):
+		# Open a pickle file for writing
+		# if file exists, read pickle file
+		if os.path.exists(pickle_path) == True:
+			with open(pickle_path, 'rb') as file:
+				data = pickle.load(file)
+		else:
+			data = {'batch_id_int': 0, 'batch_id_string': '00000'}
+
+		new_batch_id_int = data['batch_id_int'] + 1
+		with open(pickle_path, 'wb') as pickle_file:
+			data = {'batch_id_int': new_batch_id_int}
+			pickle.dump(data, pickle_file)
+
+	# Function to read the batch number pickle file
+	def read_batch_number_pickle(pickle_path):
+		# check if file exists
+		if os.path.exists(pickle_path) == False:
+			# create a pickle file with batch_id = 0
+			print(f'{Fore.YELLOW}No pickle file found!{Fore.RESET} Creating one now.')
+			write_batch_number_pickle(pickle_path)
+			batch_id_dict = {'batch_id_int': 0, 'batch_id_string': '00000'}
+			return batch_id_dict
+		else:
+			with open(pickle_path, 'rb') as pickle_file:
+				data = pickle.load(pickle_file)
+
+			batch_id = str(data['batch_id_int'])
+			batch_id_int = int(batch_id)
+
+			if int(batch_id) < 10000:
+				# any number from 0 - 9999 will have 0s padding in front
+				batch_id_string = batch_id.zfill(5)
+			else:
+				batch_id_string = batch_id
+
+			batch_id_dict = {'batch_id_int': batch_id_int, 'batch_id_string': batch_id_string}
+
+			# return dictionary with 'batch_id_int' and 'batch_id_string' keys
+			return batch_id_dict
+
+	# read the pickle file (create one if needed)
+	pickle_path = os.path.join(R_drive_parent_folder, 'uplc_batch_num.pickle')
+	batch_id_dict = read_batch_number_pickle(pickle_path)
+	batch_id_string = batch_id_dict['batch_id_string']
+	batch_id_int = batch_id_dict['batch_id_int']
+	print(f'Batch ID: {batch_id_string}')
+
+	# update (add 1 to batch id) and write the pickle file
+	write_batch_number_pickle(pickle_path)
 
 	sop_info = yaml_data_xfer(filename='sops.yaml', primary_path=os.path.join(os.getcwd(), 'config'), backup_path=os.path.join(os.getcwd(), 'config'), data=sop_info_default_input_data)
 	user_preferences_config = yaml_data_xfer(filename='user_preferences_config.yaml', primary_path=backup_path, backup_path='', data=user_preferences_default_data_input, silent=True)
@@ -1783,6 +1840,7 @@ def click_and_exit():
 	can.drawString(120, 85, selected_date_string)
 	can.drawString(115, 123, scale.get())
 	can.drawString(115, 152, uplc_system_asset_tags)
+	can.drawString(630, 45, "Batch ID: " + batch_id_string)
 	can.saveState()
 
 	user_preferences_config = yaml_data_xfer(filename='user_preferences_config.yaml', primary_path=backup_path, backup_path='', data=user_preferences_default_data_input, silent=True)
@@ -1932,7 +1990,10 @@ def click_and_exit():
 		print(f'Sample Description: {sample_descriptions[i]}')
 		print(f'Lot: {lots[i]}')
 		print(f'Lab Report: {lab_report_ids[i]}')
-		print(f'Triplicate Required: {triplicate_status_list[i]}')
+		if triplicate_status_list[i] == True:
+			print(f'{Fore.YELLOW}Triplicate Required: {Fore.GREEN}{triplicate_status_list[i]}{Fore.RESET}')
+		else:
+			print(f'Triplicate Required: {triplicate_status_list[i]}')
 		print(f'Stability Sample: {stability_status_list[i]}\n')
 
 		# Dictionaries containing all x, y cordinates for each row
@@ -2055,6 +2116,10 @@ def click_and_exit():
 		can.drawString(125, 688, wips[i])
 		can.drawString(318, 688, lots[i])
 		can.drawString(125, 672, sample_descriptions[i])
+		can.drawString(470, 18, 'Batch ID: ' + batch_id_string)
+		page_number = str(i + 1)
+		can.drawString(495, 8, 'Page ' + page_number + ' of ' + str(len(wips)))
+
 
 		if polarities[i] == "Water Soluble":
 			for idx, row in enumerate(ws[i]):
@@ -2126,11 +2191,11 @@ def click_and_exit():
 								print(f'Form: {form}')
 								print(f'Spec: {spec}')
 								print(f'Acceptable Methods: {method}')
-								print(f'\nWARNING:\n{analyte} specification for WIP/Item {wips[i]} not found in specification database!\n')
+								print(f'\n{Fore.RED}WARNING:{Fore.RESET}\n{analyte} specification for WIP/Item {wips[i]} not found in specification database!\n')
 
 							if (type(form) != str) or (form == ''):
 								form = analyte
-								print("No analyte form found. Defaulting to ambiguous vitamin form.")
+								print(f"{Fore.YELLOW}No analyte form found.{Fore.RESET} Defaulting to ambiguous vitamin form.")
 
 							# Logic to put analyte or form on the PDF document
 							if (analyte == 'B1') or (analyte == 'B2') or (analyte == 'B5'):
@@ -2227,11 +2292,11 @@ def click_and_exit():
 								print(f'Form: {form}')
 								print(f'Spec: {spec}')
 								print(f'Acceptable Methods: {method}')
-								print(f'\nWARNING:\n{analyte} specification for WIP/Item {wips[i]} not found in specification database!\n')
+								print(f'\n{Fore.RED}WARNING:{Fore.RESET}\n{analyte} specification for WIP/Item {wips[i]} not found in specification database!\n')
 
 							if (type(form) != str) or (form == ''):
 								form = analyte
-								print("No analyte form found. Defaulting to ambiguous vitamin form.")
+								print(f"{Fore.YELLOW}No analyte form found.{Fore.RESET} Defaulting to ambiguous vitamin form.")
 
 							spec_line = form + ': ' + spec
 
@@ -2263,9 +2328,7 @@ def click_and_exit():
 			can.saveState()
 			can.setFillColor('Red')
 			can.setFont('Helvetica-Bold', 14)
-			# Only removed this triplicate required for work-around for water soluble multi analyte space at the bottom... RAP 01102023
-			if polarities[i] == "Fat Soluble":
-				can.drawString(395, 665, "TRIPLICATE REQUIRED")
+			can.drawString(395, 665, "TRIPLICATE REQUIRED")
 			can.restoreState()
 
 		#if statement related to sample type
@@ -2279,16 +2342,22 @@ def click_and_exit():
 					can.drawString(470, 133, weights[i] + " g")
 			if units_per_spec_list[i] != '':
 				can.drawString(315, 113, str(units_per_spec_list[i]))
-				spec_weight = round(float(weights[i]) * float(units_per_spec_list[i]), 8)
-				spec_weight = str(spec_weight)
-				can.drawString(315, 93, spec_weight + " g")
-				if triplicate_status_list[i] == True:
-					can.drawString(390, 113, str(units_per_spec_list[i]))
-					can.drawString(470, 113, str(units_per_spec_list[i]))
+				# next 3 lines added to fix ValueError: could not convert string to float.
+				if weights[i] == '':
+					spec_weight = ''
+				else:
 					spec_weight = round(float(weights[i]) * float(units_per_spec_list[i]), 8)
 					spec_weight = str(spec_weight)
-					can.drawString(390, 93, spec_weight + " g")
-					can.drawString(470, 93, spec_weight + " g")
+					can.drawString(315, 93, spec_weight + " g")
+				if triplicate_status_list[i] == True:
+					if units_per_spec_list[i] != '':
+						can.drawString(390, 113, str(units_per_spec_list[i]))
+						can.drawString(470, 113, str(units_per_spec_list[i]))
+					if (weights[i] != '') and (units_per_spec_list[i] != ''):
+						spec_weight = round(float(weights[i]) * float(units_per_spec_list[i]), 8)
+						spec_weight = str(spec_weight)
+						can.drawString(390, 93, spec_weight + " g")
+						can.drawString(470, 93, spec_weight + " g")
 
 		elif sample_types[i] == "Finished Product" and polarities[i] == "Fat Soluble":
 			can.drawString(108, 655, "X")
@@ -2297,9 +2366,13 @@ def click_and_exit():
 				can.drawString(245, 153, weights[i] + " g")
 			if units_per_spec_list[i] != '':
 				can.drawString(245, 130, str(units_per_spec_list[i]))
-				spec_weight = round(float(weights[i]) * float(units_per_spec_list[i]), 8)
-				spec_weight = str(spec_weight)
-				can.drawString(245, 111, spec_weight + " g")
+				# next 3 lines added to fix ValueError: could not convert string to float.
+				if weights[i] == '':
+					spec_weight = ''
+				else:
+					spec_weight = round(float(weights[i]) * float(units_per_spec_list[i]), 8)
+					spec_weight = str(spec_weight)
+					can.drawString(245, 111, spec_weight + " g")
 
 		elif sample_types[i] == "Raw Blend" and polarities[i] != "Fat Soluble":
 			can.drawString(198, 655, "X")
@@ -2877,6 +2950,7 @@ def click_and_exit():
 			outputStream2.close()
 			os.remove(r"forms\fat_soluble\uplc_sample_form_fs_cde2.pdf")
 
+		# Water Soluble Testing Forms
 		elif len(water_soluble_testing_list[i]) == 1 and triplicate_status_list[i] == True:
 			existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_triplicate_one_ws_analyte.pdf", "rb"))
 			packet2 = io.BytesIO()
@@ -3032,7 +3106,8 @@ def click_and_exit():
 			os.remove(r"forms\water_soluble\uplc_sample_form_single_one_ws_analyte2.pdf")
 
 		elif len(water_soluble_testing_list[i]) == 2 and triplicate_status_list[i] == False:
-			existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_single_two_ws_analytes.pdf", "rb"))
+			#existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_single_two_ws_analytes.pdf", "rb"))
+			existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_triplicate_two_ws_analytes.pdf", "rb"))
 			packet2 = io.BytesIO()
 			can2 = canvas.Canvas(packet2, pagesize=letter)
 			packet2.seek(0)
@@ -3043,13 +3118,14 @@ def click_and_exit():
 			#This is the rotated string values for the upper portion
 			can2.drawString(380, 125, initials +" N/A " + selected_date_string) # initial and date A
 			can2.restoreState()
+
 			# This is the rotated string values for the lower portion
-			can2.saveState()
-			can2.rotate(33)
-			can2.setFillColor(gmp_crossouts_font_color)
-			can2.setFont('Helvetica-Bold', 14)
-			can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
-			can2.restoreState()
+			# can2.saveState()
+			# can2.rotate(33)
+			# can2.setFillColor(gmp_crossouts_font_color)
+			# can2.setFont('Helvetica-Bold', 14)
+			# can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
+			# can2.restoreState()
 			can2.save()
 			packet2.seek(0)
 			new_pdf2 = PdfFileReader(packet2)
@@ -3061,13 +3137,15 @@ def click_and_exit():
 			page_B = new_pdf2.getPage(0)
 			page_A.mergePage(page_B)
 			output2.addPage(page_A)
-			outputStream2 = open(r"forms\water_soluble\uplc_sample_form_single_two_ws_analyte2.pdf", "wb")
+			#outputStream2 = open(r"forms\water_soluble\uplc_sample_form_single_two_ws_analyte2.pdf", "wb")
+			outputStream2 = open(r"forms\water_soluble\uplc_sample_form_triplicate_two_ws_analyte2.pdf", "wb")
 			output2.write(outputStream2)
 			outputStream2.close()
-			os.remove(r"forms\water_soluble\uplc_sample_form_single_two_ws_analyte2.pdf")
+			#os.remove(r"forms\water_soluble\uplc_sample_form_single_two_ws_analyte2.pdf")
+			os.remove(r"forms\water_soluble\uplc_sample_form_triplicate_two_ws_analyte2.pdf")
 
 		elif len(water_soluble_testing_list[i]) == 3 and triplicate_status_list[i] == False:
-			existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_single_three_ws_analytes.pdf", "rb"))
+			existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_triplicate_three_ws_analytes.pdf", "rb"))
 			packet2 = io.BytesIO()
 			can2 = canvas.Canvas(packet2, pagesize=letter)
 			packet2.seek(0)
@@ -3079,12 +3157,12 @@ def click_and_exit():
 			can2.drawString(328, 134, initials +" N/A " + selected_date_string) # initial and date A
 			can2.restoreState()
 			# This is the rotated string values for the lower portion
-			can2.saveState()
-			can2.rotate(33)
-			can2.setFillColor(gmp_crossouts_font_color)
-			can2.setFont('Helvetica-Bold', 14)
-			can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
-			can2.restoreState()
+			# can2.saveState()
+			# can2.rotate(33)
+			# can2.setFillColor(gmp_crossouts_font_color)
+			# can2.setFont('Helvetica-Bold', 14)
+			# can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
+			# can2.restoreState()
 			can2.save()
 			packet2.seek(0)
 			new_pdf2 = PdfFileReader(packet2)
@@ -3096,13 +3174,13 @@ def click_and_exit():
 			page_B = new_pdf2.getPage(0)
 			page_A.mergePage(page_B)
 			output2.addPage(page_A)
-			outputStream2 = open(r"forms\water_soluble\uplc_sample_form_single_three_ws_analyte2.pdf", "wb")
+			outputStream2 = open(r"forms\water_soluble\uplc_sample_form_triplicate_three_ws_analyte2.pdf", "wb")
 			output2.write(outputStream2)
 			outputStream2.close()
-			os.remove(r"forms\water_soluble\uplc_sample_form_single_three_ws_analyte2.pdf")
+			os.remove(r"forms\water_soluble\uplc_sample_form_triplicate_three_ws_analyte2.pdf")
 
 		elif len(water_soluble_testing_list[i]) == 4 and triplicate_status_list[i] == False:
-			existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_single_four_ws_analytes.pdf", "rb"))
+			existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_triplicate_four_ws_analytes.pdf", "rb"))
 			packet2 = io.BytesIO()
 			can2 = canvas.Canvas(packet2, pagesize=letter)
 			packet2.seek(0)
@@ -3114,12 +3192,12 @@ def click_and_exit():
 			can2.drawString(280, 155, initials +" N/A " + selected_date_string) # initial and date A
 			can2.restoreState()
 			# This is the rotated string values for the lower portion
-			can2.saveState()
-			can2.rotate(33)
-			can2.setFillColor(gmp_crossouts_font_color)
-			can2.setFont('Helvetica-Bold', 14)
-			can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
-			can2.restoreState()
+			# can2.saveState()
+			# can2.rotate(33)
+			# can2.setFillColor(gmp_crossouts_font_color)
+			# can2.setFont('Helvetica-Bold', 14)
+			# can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
+			# can2.restoreState()
 			can2.save()
 			packet2.seek(0)
 			new_pdf2 = PdfFileReader(packet2)
@@ -3131,23 +3209,23 @@ def click_and_exit():
 			page_B = new_pdf2.getPage(0)
 			page_A.mergePage(page_B)
 			output2.addPage(page_A)
-			outputStream2 = open(r"forms\water_soluble\uplc_sample_form_single_four_ws_analyte2.pdf", "wb")
+			outputStream2 = open(r"forms\water_soluble\uplc_sample_form_triplicate_four_ws_analyte2.pdf", "wb")
 			output2.write(outputStream2)
 			outputStream2.close()
-			os.remove(r"forms\water_soluble\uplc_sample_form_single_four_ws_analyte2.pdf")
+			os.remove(r"forms\water_soluble\uplc_sample_form_triplicate_four_ws_analyte2.pdf")
 
 		elif len(water_soluble_testing_list[i]) == 5 and triplicate_status_list[i] == False:
-			existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_single_five_ws_analytes.pdf", "rb"))
+			existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_triplicate_five_ws_analytes.pdf", "rb"))
 			packet2 = io.BytesIO()
 			can2 = canvas.Canvas(packet2, pagesize=letter)
 			packet2.seek(0)
 			# This is the rotated string values for the lower portion
-			can2.saveState()
-			can2.rotate(33)
-			can2.setFillColor(gmp_crossouts_font_color)
-			can2.setFont('Helvetica-Bold', 14)
-			can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
-			can2.restoreState()
+			# can2.saveState()
+			# can2.rotate(33)
+			# can2.setFillColor(gmp_crossouts_font_color)
+			# can2.setFont('Helvetica-Bold', 14)
+			# can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
+			# can2.restoreState()
 			can2.save()
 			packet2.seek(0)
 			new_pdf2 = PdfFileReader(packet2)
@@ -3159,10 +3237,10 @@ def click_and_exit():
 			page_B = new_pdf2.getPage(0)
 			page_A.mergePage(page_B)
 			output2.addPage(page_A)
-			outputStream2 = open(r"forms\water_soluble\uplc_sample_form_single_five_ws_analyte2.pdf", "wb")
+			outputStream2 = open(r"forms\water_soluble\uplc_sample_form_triplicate_five_ws_analyte2.pdf", "wb")
 			output2.write(outputStream2)
 			outputStream2.close()
-			os.remove(r"forms\water_soluble\uplc_sample_form_single_five_ws_analyte2.pdf")
+			os.remove(r"forms\water_soluble\uplc_sample_form_triplicate_five_ws_analyte2.pdf")
 
 		else:
 			existing_pdf = PdfFileReader(open(r"forms\uplc_sample_form.pdf", "rb"))
@@ -3344,32 +3422,32 @@ def openOldPdfFileMenu():
 
 def check_specifications():
 
-	print("   _____  _____ _   _    _____                  _____ _               _             ")
-	print("  / ____|/ ____| \ | |  / ____|                / ____| |             | |            ")
-	print(" | (___ | |    |  \| | | (___  _ __   ___  ___| |    | |__   ___  ___| | _____ _ __ ")
-	print("  \___ \| |    | . ` |  \___ \| '_ \ / _ \/ __| |    | '_ \ / _ \/ __| |/ / _ \ '__|")
-	print("  ____) | |____| |\  |  ____) | |_) |  __/ (__| |____| | | |  __/ (__|   <  __/ |   ")
-	print(" |_____/ \_____|_| \_| |_____/| .__/ \___|\___|\_____|_| |_|\___|\___|_|\_\___|_|   ")
-	print("                              | |                                                   ")
-	print("                              |_|                                                   ")
-	print("                                                                                    ")
+	print(f"{Fore.RED}   _____  _____ _   _    _____                  _____ _               _             ")
+	print(f"{Fore.YELLOW}  / ____|/ ____| \ | |  / ____|                / ____| |             | |            ")
+	print(f"{Fore.GREEN} | (___ | |    |  \| | | (___  _ __   ___  ___| |    | |__   ___  ___| | _____ _ __ ")
+	print(f"{Fore.BLUE}  \___ \| |    | . ` |  \___ \| '_ \ / _ \/ __| |    | '_ \ / _ \/ __| |/ / _ \ '__|")
+	print(f"{Fore.MAGENTA}  ____) | |____| |\  |  ____) | |_) |  __/ (__| |____| | | |  __/ (__|   <  __/ |   ")
+	print(f"{Fore.RED} |_____/ \_____|_| \_| |_____/| .__/ \___|\___|\_____|_| |_|\___|\___|_|\_\___|_|   ")
+	print(f"{Fore.YELLOW}                              | |                                                   ")
+	print(f"{Fore.GREEN}                              |_|                                                   ")
+	print(f"{Fore.RESET}                                                                                    ")
 
 	try:
 		# Read in DataFrame and make sure dtype is string.
 		#df = pd.read_excel(os.path.normpath('R:\\QC\\Laboratory\\7. Lab improvement\\Raw Material Testing Plan\\test\\specification_database.xlsx'), engine='openpyxl', dtype=str)
 		df = read_encrypted_excel(os.path.join(R_drive_parent_folder,'specification_database.xlsx'))
-		print(f"Reading specification_database.xlsx from {R_drive_parent_folder}.")
+		print(f"Reading specification_database.xlsx from {Fore.GREEN}{R_drive_parent_folder}{Fore.RESET}.")
 	except:
 		# Read in DataFrame and make sure dtype is string.
-		print("Could not access 'specification_database.xlsx' in the R: drive or password is incorrect. Trying local location now.")
+		print(f"{Fore.YELLOW}Could not access 'specification_database.xlsx' in the R: drive or password is incorrect.{Fore.RESET} Trying local location now.")
 		try:
 			df = pd.read_excel(os.path.join(os.getcwd(), 'specification_database.xlsx'), engine='openpyxl', dtype=str)
-			print("'specification_database.xlsx' successfully found on local drive.")
+			print(f"'specification_database.xlsx' {Fore.GREEN}successfully found on local drive.{Fore.RESET}")
 		except:
-			print("\n\n***************************************************************************************")
-			print("CRITICAL WARNING!:")
-			print("Failed to find 'specification_database.xlsx' in the R drive or on your local computer.")
-			print("***************************************************************************************\n\n")
+			print(f"\n\n{Fore.RED}***************************************************************************************{Fore.RESET}")
+			print(f"{Fore.RED}CRITICAL WARNING!:{Fore.RESET}")
+			print(f"{Fore.RED}Failed to find 'specification_database.xlsx' in the R drive or on your local computer.{Fore.RESET}")
+			print(f"{Fore.RED}***************************************************************************************{Fore.RESET}\n\n")
 
 
 	def return_spec_value(wip, spec_database_property_column):
@@ -3382,7 +3460,7 @@ def check_specifications():
 			#df = pd.read_excel(os.path.join(R_drive_parent_folder, 'specification_database.xlsx'), engine='openpyxl', dtype=str)
 		except:
 			# Read in DataFrame and make sure dtype is string.
-			print("Could not access 'specification_database.xlsx' in the R: drive. Trying local location now.")
+			print(f"{Fore.RED}Could not access 'specification_database.xlsx' in the R: drive.{Fore.RESET} Trying local location now.")
 			df = pd.read_excel(os.path.join(os.getcwd(), 'specification_database.xlsx'), engine='openpyxl', dtype=str)
 
 		# Convert all values contained within the specification excel to string type variables
@@ -3455,42 +3533,63 @@ def check_specifications():
 
 					if sample_type == '':
 						if field.get() == '':
-							print(f'\nSpecification databse does not have a sample type defined for WIP {wip}.\nPlease remember to manually set the sample type in the form before making your batch.\n')
+							print(f'\n{Fore.RED}Specification database does not have a sample type defined for WIP {wip}{Fore.RESET}.\nPlease remember to manually set the sample type in the form before making your batch.\n')
 
 				# Piece Weight fields
 				if col == 2:
 					piece_weight = return_spec_value(wip, 'Piece Weight/Usage')
 					try:
 						if piece_weight != '':
+							# if the field contains information, delete the info and update with info from database.
 							if field.get() != '':
 								field.delete(0, END)
 								field.insert(0, piece_weight)
 							else:
-								field.insert(0, piece_weight)
+								if pd.isnull(piece_weight):
+									field.insert(0, '')
+								else:
+									field.insert(0, piece_weight)
 					except:
-							print(f"Please remember to enter the Piece Weight for WIP {wip}")
+							print(f"{Fore.RED}Please remember to enter the Piece Weight for WIP {wip}{Fore.RESET}")
 							pass
 
 				if col == 3:
 					units_per_spec = return_spec_value(wip, 'spec serving')
 					try:
 						if units_per_spec != '':
+							# if the field contains information, delete the info and update with info from database.
 							if field.get() != '':
 								field.delete(0, END)
 								field.insert(0, units_per_spec)
 							else:
-								field.insert(0, units_per_spec)
+								if pd.isnull(units_per_spec):
+									field.insert(0, '')
+								else:
+									field.insert(0, units_per_spec)
 					except:
-						print(f"Usage per spec data is missing from the specification database.\nPlease manually enter the 'Usage Per Spec' information.")
+						print(f"{Fore.RED}Usage per spec data is missing from the specification database.\nPlease manually enter the 'Usage Per Spec' information.{Fore.RESET}")
 						pass
 
 				piece_weight_units = return_spec_value(wip, 'PW/Usage Units')
 
 			print(f"WIP/Item: {wip}")
-			print(f"Sample Description: {description}")
-			print(f"Sample Type: {sample_type}")
-			print(f"Piece Weight / Usage: {piece_weight} {piece_weight_units}")
-			print(f"Units Per Spec: {units_per_spec}")
+			if description == '' or pd.isnull(description):
+				print(f"Sample Description: {Fore.RED}MISSING{Fore.RESET}")
+			else:
+				print(f"Sample Description: {description}")
+			if sample_type == '' or pd.isnull(sample_type):
+				print(f"Sample Type: {Fore.RED}MISSING{Fore.RESET}")
+			else:
+				print(f"Sample Type: {sample_type}")
+			if piece_weight == '' or pd.isnull(piece_weight):
+				print(f"Piece Weight / Usage: {Fore.RED}MISSING{Fore.RESET}")
+			else:
+				print(f"Piece Weight / Usage: {piece_weight} {piece_weight_units}")
+			if units_per_spec == '' or pd.isnull(units_per_spec):
+				print(f"Units Per Spec: {Fore.RED}MISSING{Fore.RESET}")
+			else:
+				print(f"Units Per Spec: {units_per_spec}")
+
 
 	print("\n***********************************************done.")
 
