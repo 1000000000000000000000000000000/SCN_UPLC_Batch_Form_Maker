@@ -26,7 +26,7 @@ pip install -r libversions.txt
 
 If the previous command did not return any errors, you have successfully installed python and the required python packages to run the program. Now just clean up by entering the following command:
 ```
-"conda deactivate"
+conda deactivate
 ```
 
 That's it, you're done!
