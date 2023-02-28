@@ -41,4 +41,9 @@ Now that you are in the project folder, enter the following command:
 ```
 conda activate uplc_batch_helper && python ./scn_uplc_batch_helper_v1_0_0.py
 ```
-That's all there is to it.
+
+If everything is working you should see the graphical user interface appear on your screen.
+
+![GUI Image](/images/startup_screenshot.PNG)
+
+If the GUI appeared on your screen, congratulations! You have successfully installed and ran the program. Now, simply fill in the required information and print your forms. That's all there is to it!
