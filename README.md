@@ -9,25 +9,36 @@ This program helps the laboratory professionals at Santa Cruz Nutritionals in pr
 </ul>
 
 ### Instructions
-After downloading the repository and successfully installing miniconda on your Windows machine, navigate to the project directory. In the command prompt, enter the following: 
-"conda create -n uplc_batch_helper python=3.10 -y" 
+After downloading the repository and successfully installing miniconda on your Windows machine, navigate to the project directory. In the command prompt, enter the following:
+```
+conda create -n uplc_batch_helper python=3.10 -y
+```
 
 Next, enter the following:
-"conda activate uplc_batch_helper"
+```
+conda activate uplc_batch_helper
+```
 
 Now, enter the following (make sure you are in the directory where libversions.txt is located):
-"pip install -r libversions.txt"
+```
+pip install -r libversions.txt
+```
 
 If the previous command did not return any errors, you have successfully installed python and the required python packages to run the program. Now just clean up by entering the following command:
+```
 "conda deactivate"
+```
 
 That's it, you're done!
 
 ## Running the program
 To run the program, open the command prompt. You can navigate to the project folder by entering the following:
-"cd <PATH TO PROJECT FOLDER>"
+```
+cd <PATH TO PROJECT FOLDER>
+```
 
 Now that you are in the project folder, enter the following command:
-"conda activate uplc_batch_helper && python ./scn_uplc_batch_helper_v1_0_0.py"
-
+```
+conda activate uplc_batch_helper && python ./scn_uplc_batch_helper_v1_0_0.py
+```
 That's all there is to it.
