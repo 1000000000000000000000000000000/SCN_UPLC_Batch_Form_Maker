@@ -27,6 +27,7 @@ from PIL import Image, ImageTk
 from contextlib import suppress
 import random
 import pandas as pd
+import numpy as np
 from ttkthemes import ThemedTk
 import yaml
 import msoffcrypto # pip install msoffcrypto-tool
@@ -346,7 +347,7 @@ weight_header.grid(column=7, row=0, padx=5)
 units_per_spec_header = Label(window, text="Units per\n Spec", font=("Arial Bold", 10))
 units_per_spec_header.grid(column=8, row=0, padx=5)
 
-triplicate_header = Label(window, text="Reps", font=("Arial Bold", 10))
+triplicate_header = Label(window, text=" 3X ", font=("Arial Bold", 10))
 triplicate_header.grid(column=9, row=0, padx=5)
 
 stability_header = Label(window, text="Stability", font=("Arial Bold", 10))
@@ -2120,9 +2121,17 @@ def click_and_exit():
 		page_number = str(i + 1)
 		can.drawString(495, 8, 'Page ' + page_number + ' of ' + str(len(wips)))
 
+		# Make a list from water_soluble_testing_list[i] of methods
+		water_soluble_methods = []
+		for entry in water_soluble_testing_list[i]:
+			if entry != '':
+				method_number = entry.split('(')[-1].split(')')[0]
+				water_soluble_methods.append(method_number)
+
 		# Get the number of water soluble tests
 		ws_test_num = 0
-		for each in water_soluble_testing_list[i]:
+		unique_water_soluble_testing_list = np.unique(np.array(water_soluble_methods))
+		for each in unique_water_soluble_testing_list:
 			if each != '':
 				ws_test_num += 1
 
@@ -3143,14 +3152,16 @@ def click_and_exit():
 			#This is the rotated string values for the upper portion
 			can2.drawString(380, 125, initials +" N/A " + selected_date_string) # initial and date A
 			can2.restoreState()
-
-			# This is the rotated string values for the lower portion
-			# can2.saveState()
-			# can2.rotate(33)
-			# can2.setFillColor(gmp_crossouts_font_color)
-			# can2.setFont('Helvetica-Bold', 14)
-			# can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
-			# can2.restoreState()
+			if ws_test_num == 1:
+				# This is the rotated string values for the lower portion
+				can2.saveState()
+				can2.rotate(33)
+				can2.setFillColor(gmp_crossouts_font_color)
+				can2.setFont('Helvetica-Bold', 14)
+				can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
+				can2.restoreState()
+				# Draw line
+				can2.line(390, 65, 500, 138)
 			can2.save()
 			packet2.seek(0)
 			new_pdf2 = PdfFileReader(packet2)
@@ -3181,13 +3192,16 @@ def click_and_exit():
 			#This is the rotated string values for the upper portion
 			can2.drawString(328, 134, initials +" N/A " + selected_date_string) # initial and date A
 			can2.restoreState()
-			# This is the rotated string values for the lower portion
-			# can2.saveState()
-			# can2.rotate(33)
-			# can2.setFillColor(gmp_crossouts_font_color)
-			# can2.setFont('Helvetica-Bold', 14)
-			# can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
-			# can2.restoreState()
+			if ws_test_num == 1:
+				# This is the rotated string values for the lower portion
+				can2.saveState()
+				can2.rotate(33)
+				can2.setFillColor(gmp_crossouts_font_color)
+				can2.setFont('Helvetica-Bold', 14)
+				can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
+				can2.restoreState()
+				# Draw line
+				can2.line(390, 65, 500, 138)
 			can2.save()
 			packet2.seek(0)
 			new_pdf2 = PdfFileReader(packet2)
@@ -3214,15 +3228,18 @@ def click_and_exit():
 			can2.setFillColor(gmp_crossouts_font_color)
 			can2.setFont('Helvetica-Bold', 14)
 			#This is the rotated string values for the upper portion
-			can2.drawString(280, 155, initials +" N/A " + selected_date_string) # initial and date A
+			can2.drawString(280, 155, initials +" N/A " + selected_date_string)
 			can2.restoreState()
-			# This is the rotated string values for the lower portion
-			# can2.saveState()
-			# can2.rotate(33)
-			# can2.setFillColor(gmp_crossouts_font_color)
-			# can2.setFont('Helvetica-Bold', 14)
-			# can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
-			# can2.restoreState()
+			if ws_test_num == 1:
+				# This is the rotated string values for the lower portion
+				can2.saveState()
+				can2.rotate(33)
+				can2.setFillColor(gmp_crossouts_font_color)
+				can2.setFont('Helvetica-Bold', 14)
+				can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
+				can2.restoreState()
+				# Draw line
+				can2.line(390, 65, 500, 138)
 			can2.save()
 			packet2.seek(0)
 			new_pdf2 = PdfFileReader(packet2)
@@ -3240,17 +3257,28 @@ def click_and_exit():
 			os.remove(r"forms\water_soluble\uplc_sample_form_triplicate_four_ws_analyte2.pdf")
 
 		elif len(water_soluble_testing_list[i]) == 5 and triplicate_status_list[i] == False:
-			existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_triplicate_five_ws_analytes.pdf", "rb"))
+			#existing_pdf = PdfFileReader(open(r"forms\water_soluble\uplc_sample_form_triplicate_five_ws_analytes.pdf", "rb"))
+			existing_pdf = PdfFileReader(open(r"forms\uplc_sample_form.pdf", "rb"))
 			packet2 = io.BytesIO()
 			can2 = canvas.Canvas(packet2, pagesize=letter)
 			packet2.seek(0)
-			# This is the rotated string values for the lower portion
-			# can2.saveState()
-			# can2.rotate(33)
-			# can2.setFillColor(gmp_crossouts_font_color)
-			# can2.setFont('Helvetica-Bold', 14)
-			# can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
-			# can2.restoreState()
+			if ws_test_num == 1:
+				# This is the rotated string values for the lower portion
+				can2.saveState()
+				can2.rotate(33)
+				can2.setFillColor(gmp_crossouts_font_color)
+				can2.setFont('Helvetica-Bold', 14)
+				can2.drawString(370, -155, initials +" N/A " + selected_date_string) # initial and date for single samples - lower right box
+				can2.restoreState()
+				# Draw line
+				can2.line(390, 65, 500, 138)
+			else:
+				can2.saveState()
+				can2.rotate(33)
+				can2.setFillColor(gmp_crossouts_font_color)
+				can2.setFont('Helvetica-Bold', 14)
+				can2.drawString(370, -155, ' ')
+				can2.restoreState()
 			can2.save()
 			packet2.seek(0)
 			new_pdf2 = PdfFileReader(packet2)
@@ -3262,10 +3290,12 @@ def click_and_exit():
 			page_B = new_pdf2.getPage(0)
 			page_A.mergePage(page_B)
 			output2.addPage(page_A)
-			outputStream2 = open(r"forms\water_soluble\uplc_sample_form_triplicate_five_ws_analyte2.pdf", "wb")
+			#outputStream2 = open(r"forms\water_soluble\uplc_sample_form_triplicate_five_ws_analyte2.pdf", "wb")
+			outputStream2 = open(r"forms\uplc_sample_form2.pdf", "wb")
 			output2.write(outputStream2)
 			outputStream2.close()
-			os.remove(r"forms\water_soluble\uplc_sample_form_triplicate_five_ws_analyte2.pdf")
+			#os.remove(r"forms\water_soluble\uplc_sample_form_triplicate_five_ws_analyte2.pdf")
+			os.remove(r"forms\uplc_sample_form2.pdf")
 
 		else:
 			existing_pdf = PdfFileReader(open(r"forms\uplc_sample_form.pdf", "rb"))
@@ -3291,10 +3321,15 @@ def click_and_exit():
 	merger.write(batch_file_name)
 
 	# logic controlling how files are organized in the sub-directory 'uplc batches' and makes sure more than one batch with the same name can be created and opened.
+	#sub_dir = r"\uplc batches\\"
 	sub_dir = r"\uplc batches\\"
-	# if os.path.exists(os.path.join(os.getcwd(), sub_dir)) == False:
-	# 	os.system('mkdir ./uplc_batches')
-	if path.exists(os.getcwd() + sub_dir + batch_file_name) == False:
+
+	# Check if uplc batches directory exists, if not make one.
+	uplc_batches_dir = os.path.join(os.getcwd(), 'uplc batches')
+	if os.path.exists(uplc_batches_dir) == False:
+		os.makedirs(uplc_batches_dir, exist_ok=True)
+
+	if os.path.exists(os.path.join(os.getcwd(), 'uplc batches', batch_file_name)) == False:
 		# move batch file to the uplc batches directory
 		os.rename(batch_file_name, os.getcwd() + sub_dir + batch_file_name)
 		# open the batch file
