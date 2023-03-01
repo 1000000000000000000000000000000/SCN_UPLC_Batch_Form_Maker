@@ -216,7 +216,7 @@ root = ThemedTk(theme='vista')
 
 # our_themes = ttk.Style().theme_names()
 # our_themes2 = root.get_themes()
-selected_themes = ['vista', 'radiance', 'xpnative']
+selected_themes = ['vista', 'xpnative']
 
 style = ttk.Style(root)
 
@@ -2120,6 +2120,11 @@ def click_and_exit():
 		page_number = str(i + 1)
 		can.drawString(495, 8, 'Page ' + page_number + ' of ' + str(len(wips)))
 
+		# Get the number of water soluble tests
+		ws_test_num = 0
+		for each in water_soluble_testing_list[i]:
+			if each != '':
+				ws_test_num += 1
 
 		if polarities[i] == "Water Soluble":
 			for idx, row in enumerate(ws[i]):
@@ -2331,32 +2336,40 @@ def click_and_exit():
 			can.drawString(395, 665, "TRIPLICATE REQUIRED")
 			can.restoreState()
 
-		#if statement related to sample type
+		# if it is a water soluble finished product
 		if sample_types[i] == "Finished Product" and polarities[i] != "Fat Soluble":
 			can.drawString(108, 655, "X")
 			can.drawString(310, 657, "N/A")
 			if weights[i] != '':
-				can.drawString(315, 133, weights[i] + " g")
-				if triplicate_status_list[i] == True:
+				if (ws_test_num >= 1) or (triplicate_status_list[i] == True):
+					can.drawString(315, 133, weights[i] + " g")
+				if (ws_test_num >= 2) or (triplicate_status_list[i] == True):
 					can.drawString(390, 133, weights[i] + " g")
+				if (ws_test_num >= 3) or (triplicate_status_list[i] == True):
 					can.drawString(470, 133, weights[i] + " g")
 			if units_per_spec_list[i] != '':
-				can.drawString(315, 113, str(units_per_spec_list[i]))
+				if (ws_test_num >= 1) or (triplicate_status_list[i] == True):
+					can.drawString(315, 113, str(units_per_spec_list[i]))
 				# next 3 lines added to fix ValueError: could not convert string to float.
 				if weights[i] == '':
 					spec_weight = ''
 				else:
 					spec_weight = round(float(weights[i]) * float(units_per_spec_list[i]), 8)
 					spec_weight = str(spec_weight)
-					can.drawString(315, 93, spec_weight + " g")
-				if triplicate_status_list[i] == True:
-					if units_per_spec_list[i] != '':
-						can.drawString(390, 113, str(units_per_spec_list[i]))
-						can.drawString(470, 113, str(units_per_spec_list[i]))
-					if (weights[i] != '') and (units_per_spec_list[i] != ''):
-						spec_weight = round(float(weights[i]) * float(units_per_spec_list[i]), 8)
-						spec_weight = str(spec_weight)
+					if (ws_test_num >= 1) or (triplicate_status_list[i] == True):
+						can.drawString(315, 93, spec_weight + " g")
+
+				if (ws_test_num >= 2) or (triplicate_status_list[i] == True):
+					can.drawString(390, 113, str(units_per_spec_list[i]))
+				if (ws_test_num >= 3) or (triplicate_status_list[i] == True):
+					can.drawString(470, 113, str(units_per_spec_list[i]))
+
+				if (weights[i] != '') and (units_per_spec_list[i] != ''):
+					spec_weight = round(float(weights[i]) * float(units_per_spec_list[i]), 8)
+					spec_weight = str(spec_weight)
+					if (ws_test_num >= 2) or (triplicate_status_list[i] == True):
 						can.drawString(390, 93, spec_weight + " g")
+					if (ws_test_num >= 3) or (triplicate_status_list[i] == True):
 						can.drawString(470, 93, spec_weight + " g")
 
 		elif sample_types[i] == "Finished Product" and polarities[i] == "Fat Soluble":
@@ -2374,22 +2387,27 @@ def click_and_exit():
 					spec_weight = str(spec_weight)
 					can.drawString(245, 111, spec_weight + " g")
 
+		# if it is a water soluble raw blend
 		elif sample_types[i] == "Raw Blend" and polarities[i] != "Fat Soluble":
 			can.drawString(198, 655, "X")
-			can.drawString(315, 133, "N/A")
-			can.drawString(315, 110, "N/A")
-			if triplicate_status_list[i] == True:
+			if (ws_test_num >= 1) or (triplicate_status_list[i] == True):
+				can.drawString(315, 133, "N/A")
+				can.drawString(315, 110, "N/A")
+			if (ws_test_num >= 2) or (triplicate_status_list[i] == True):
 				can.drawString(390, 133, "N/A")
-				can.drawString(470, 133, "N/A")
 				can.drawString(390, 110, "N/A")
+			if (ws_test_num >= 3) or (triplicate_status_list[i] == True):
 				can.drawString(470, 110, "N/A")
+				can.drawString(470, 133, "N/A")
 			if weights[i] != '':
 				can.drawString(310, 658, weights[i] + " mg")
 				usage_rate_in_grams = round(float(weights[i]) / 1000, 8)
 				usage_rate_in_grams = str(usage_rate_in_grams)
-				can.drawString(313, 90, usage_rate_in_grams + " g")
-				if triplicate_status_list[i] == True:
+				if (ws_test_num >= 1) or (triplicate_status_list[i] == True):
+					can.drawString(313, 90, usage_rate_in_grams + " g")
+				if (ws_test_num >= 2) or (triplicate_status_list[i] == True):
 					can.drawString(390, 90, usage_rate_in_grams + " g")
+				if (ws_test_num >= 3) or (triplicate_status_list[i] == True):
 					can.drawString(470, 90, usage_rate_in_grams + " g")
 
 		elif sample_types[i] == "Raw Blend" and polarities[i] == "Fat Soluble":
@@ -2402,14 +2420,17 @@ def click_and_exit():
 				usage_rate_in_grams = str(usage_rate_in_grams)
 				can.drawString(245, 110, usage_rate_in_grams + " g")
 
+		# if it is a water soluble 'percent active' aka pure material
 		elif sample_types[i] == "Percent Active" and polarities[i] != "Fat Soluble":
 			can.drawString(198, 655, "X")
-			can.drawString(315, 133, "N/A")
-			can.drawString(315, 110, "N/A")
-			if triplicate_status_list[i] == True:
+			if (ws_test_num >= 1) or (triplicate_status_list[i] == True):
+				can.drawString(315, 133, "N/A")
+				can.drawString(315, 110, "N/A")
+			if (ws_test_num >= 2) or (triplicate_status_list[i] == True):
 				can.drawString(390, 133, "N/A")
-				can.drawString(470, 133, "N/A")
 				can.drawString(390, 110, "N/A")
+			if (ws_test_num >= 3) or (triplicate_status_list[i] == True):
+				can.drawString(470, 133, "N/A")
 				can.drawString(470, 110, "N/A")
 				if weights[i] == '':
 					can.drawString(390, 90, "N/A")
@@ -2418,13 +2439,17 @@ def click_and_exit():
 				can.drawString(310, 658, weights[i] + " mg")
 				usage_rate_in_grams = round(float(weights[i]) / 1000, 8)
 				usage_rate_in_grams = str(usage_rate_in_grams)
-				can.drawString(313, 90, usage_rate_in_grams + " g")
-				if triplicate_status_list[i] == True:
+				if (ws_test_num >= 1) or (triplicate_status_list[i] == True):
+					can.drawString(313, 90, usage_rate_in_grams + " g")
+				if (ws_test_num >= 2) or (triplicate_status_list[i] == True):
 					can.drawString(390, 90, usage_rate_in_grams + " g")
+				if (ws_test_num >= 3) or (triplicate_status_list[i] == True):
 					can.drawString(470, 90, usage_rate_in_grams + " g")
 			else:
+				# print 'N/A' in the top of the form
 				can.drawString(310, 658, "N/A")
-				can.drawString(313, 90, "N/A")
+				# print 'N/A' in the usage rate bottom area?
+				#can.drawString(313, 90, "N/A 2")
 
 		elif sample_types[i] == "Percent Active" and polarities[i] == "Fat Soluble":
 			can.drawString(198, 655, "X")
@@ -3533,7 +3558,7 @@ def check_specifications():
 
 					if sample_type == '':
 						if field.get() == '':
-							print(f'\n{Fore.RED}Specification database does not have a sample type defined for WIP {wip}{Fore.RESET}.\nPlease remember to manually set the sample type in the form before making your batch.\n')
+							print(f'\n{Fore.RED}Specification database does not have a sample type defined for WIP {Fore.YELLOW}{wip}{Fore.RESET}.{Fore.RED}\nThis is a strong indication that the WIP is not entered into the specification database{Fore.RESET}.\nIf you think this is an error, please remember to manually set the sample type in the form before making your batch.\n')
 
 				# Piece Weight fields
 				if col == 2:
