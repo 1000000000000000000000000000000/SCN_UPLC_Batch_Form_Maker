@@ -9,5 +9,6 @@ msoffcrypto-tool==5.0.0
 openpyxl==3.0.9
 Pillow==8.4.0
 colorama==0.4.6
+numpy==1.21.5
 
 
