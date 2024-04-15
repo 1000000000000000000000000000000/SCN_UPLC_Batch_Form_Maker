@@ -2,8 +2,8 @@
 
 # All code written by Richard Pearson.
 # For questions or comments:
-# call or text: (650) 669-1460
-# email: rpearson@scnutr.com
+# call or text: (831) 713-9238
+# email: pearsor5@gene.com
 
 # Import libraries
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
@@ -137,7 +137,7 @@ def yaml_data_xfer(filename='test.yaml', primary_path=primary_path, backup_path=
 	# return the data
 	return x
 
-equipment_config_default_data_input = {'names':["", "Michael Groden", "Emily Whitaker", "Richard Pearson", "Gerry Reyes", "Jennie Flores", "Joseph Porfido", "Curtis Halpin"],
+equipment_config_default_data_input = {'names':["", "Michael Groden", "Emily Whitaker", "Richard Pearson", "Gerry Reyes", "Jennie Flores", "Joseph Porfido", "William Grinager", "Nick Fiock"],
 										'scales': ["", "002442", "003218", "002442 and 003218"],
 										'uplc': ["", "UPLC 1", "UPLC 2", "UPLC 3", "UPLC 4", "UPLC 1 and 4", "UPLC 1 and 2", "UPLC 1,2,4", "UPLC 2 and 4"],
 										'vitamin_list': ["", "Vitamin C (QAL1209)", "B1 (QAL0930)", "B2 (QAL0930)", "B3 (QAL0930)", "B5 (QAL0930)", "B6 (QAL0930)", "B6 (QAL0901)",
